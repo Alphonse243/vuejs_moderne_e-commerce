@@ -9,7 +9,7 @@ const reviews = ref([
 ])
 
 const activeTab = ref('description') // 'description' ou 'avis'
-const whatsappNumber = "+243000000000" // Remplace par ton vrai numéro
+const whatsappNumber = "+243972049788" // Remplace par ton vrai numéro
 const productUrl = window.location.href
 
 const shareOnWhatsApp = () => {

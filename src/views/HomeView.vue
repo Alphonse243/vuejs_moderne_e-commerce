@@ -115,12 +115,14 @@ const filteredProducts = computed(() => {
         </div>
         <button class="text-gray-400 text-[10px] font-bold uppercase">Plus ></button>
       </div>
-      <div class="flex overflow-x-auto gap-3 no-scrollbar">
-        <div v-for="p in products.filter(x => x.discount)" :key="p.id" class="min-w-[120px] relative">
+      <div class="flex scroll-px-20 overflow-x-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8no-scrollbar">
+        <div v-for="p in products.filter(x => x.discount)" :key="p.id" class="min-w-[120px]  px-2  relative">
           <div class="aspect-square rounded-xl bg-gray-50 overflow-hidden mb-2">
-            <img :src="p.image" loading="lazy" class="w-full h-full object-cover" />
+            <a href="/boutique">
+              <img :src="p.image" loading="lazy" class="w-full h-full object-cover" />
+            </a>
           </div>
-          <p class="text-[#FF4B2B] font-black text-sm">{{ p.price }} $</p>
+          <p class="text-[#FF4B2B] font-black text-2xl">{{ p.price }} $</p>
           <p class="text-[9px] text-gray-400 line-through">{{ Math.round(p.price * 1.5) }} $</p>
           <div class="absolute top-1 right-1 bg-[#FF4B2B] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full">
             -{{ p.discount }}%
@@ -131,12 +133,14 @@ const filteredProducts = computed(() => {
 
     <section class="p-2 mt-2">
       <h3 class="px-2 mb-3 font-bold text-gray-500 text-xs uppercase tracking-widest">Articles recommandés</h3>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
         <div v-for="p in filteredProducts" :key="p.id" 
              class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col active:scale-[0.98] transition-all">
           
           <div class="relative aspect-[4/5] bg-gray-50">
-            <img :src="p.image" loading="lazy" class="w-full h-full object-cover" />
+            <a href="/boutique">
+              <img :src="p.image" loading="lazy" class="w-full h-full object-cover" />
+            </a>
             <div v-if="p.isNew" class="absolute top-2 left-2 bg-green-500 text-white text-[8px] font-black px-2 py-0.5 rounded-sm">NOUVEAU</div>
           </div>
 
@@ -158,31 +162,7 @@ const filteredProducts = computed(() => {
       </div>
     </section>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 flex justify-around items-center z-50">
-      <button class="flex flex-col items-center gap-1 text-[#FF4B2B]">
-        <i class="fas fa-home text-lg"></i>
-        <span class="text-[9px] font-bold uppercase">Accueil</span>
-      </button>
-      <button class="flex flex-col items-center gap-1 text-gray-400">
-        <i class="fas fa-th-large text-lg"></i>
-        <span class="text-[9px] font-bold uppercase">Catégories</span>
-      </button>
-      <button class="flex flex-col items-center gap-1 text-gray-400 relative">
-        <div class="bg-gray-100 w-12 h-12 rounded-full -mt-8 border-4 border-gray-100 flex items-center justify-center shadow-lg bg-gradient-to-tr from-[#FF4B2B] to-[#FF8C00] text-white">
-          <i class="fas fa-shopping-cart"></i>
-        </div>
-        <span class="text-[9px] font-bold uppercase mt-1">Panier</span>
-        <span class="absolute -top-6 right-0 bg-yellow-400 text-black text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">2</span>
-      </button>
-      <button class="flex flex-col items-center gap-1 text-gray-400">
-        <i class="fas fa-heart text-lg"></i>
-        <span class="text-[9px] font-bold uppercase">Favoris</span>
-      </button>
-      <button class="flex flex-col items-center gap-1 text-gray-400">
-        <i class="fas fa-user text-lg"></i>
-        <span class="text-[9px] font-bold uppercase">Compte</span>
-      </button>
-    </nav>
+
 
   </main>
 </template>
