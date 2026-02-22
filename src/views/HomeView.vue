@@ -40,7 +40,9 @@ const timeLeft = ref("02:45:12")
 const currentSlide = ref(0)
 const slides = [
   { title: "Mois de la Mode", img: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e12?auto=format&fit=crop&w=800&q=80", color: "from-orange-500" },
-  { title: "Tech Days -70%", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=800&q=80", color: "from-blue-600" }
+  { title: "Tech Days -70%", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=800&q=80", color: "from-blue-600" },
+  { title: "Mois de la Mode 2", img: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e12?auto=format&fit=crop&w=800&q=80", color: "from-orange-500" },
+  { title: "Tech Days -70% 2", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=800&q=80", color: "from-blue-600" }
 ]
 
 let timer: number
