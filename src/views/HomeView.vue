@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 interface Product {
   id: number;
@@ -9,21 +9,47 @@ interface Product {
   image: string;
   isNew?: boolean;
   discount?: number;
+  sales?: number;
 }
 
+// Données étendues pour démonstration
 const products = ref<Product[]>([
-  { id: 1, name: "Montre Quartz", price: 125, category: "Accessoires", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600", isNew: true },
-  { id: 2, name: "Casque Audio", price: 299, category: "Électronique", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=600", discount: 15 },
-  { id: 3, name: "Sneakers White", price: 89, category: "Chaussures", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=600" },
-  { id: 4, name: "Sac Urbain", price: 55, category: "Mode", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=600", isNew: true },
-  { id: 5, name: "Appareil Vintage", price: 450, category: "Électronique", image: "https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&fit=crop&q=80&w=600" },
-  { id: 6, name: "Lunettes Or", price: 175, category: "Accessoires", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=600", discount: 10 },
-  { id: 7, name: "Clavier RGB", price: 120, category: "Électronique", image: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=600" },
-  { id: 8, name: "Chaise Ergonomique", price: 340, category: "Mobilier", image: "https://images.unsplash.com/photo-1505797149-43b00fe9ee2c?auto=format&fit=crop&q=80&w=600" },
+  { id: 1, name: "Montre Quartz S-Series", price: 12, category: "Accessoires", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600", isNew: true, sales: 154 },
+  { id: 2, name: "Casque Audio Wireless Pro", price: 45, category: "Électronique", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=600", discount: 30, sales: 890 },
+  { id: 3, name: "Sneakers Air-Walk White", price: 25, category: "Chaussures", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=600", sales: 432 },
+  { id: 4, name: "Sac à dos Urbain Waterproof", price: 18, category: "Mode", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=600", isNew: true, sales: 67 },
+  { id: 5, name: "Appareil Photo Retro X5", price: 120, category: "Électronique", image: "https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&fit=crop&q=80&w=600", sales: 12 },
+  { id: 6, name: "Lunettes Polarisées Gold", price: 15, category: "Accessoires", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=600", discount: 50, sales: 1205 },
+  { id: 7, name: "Clavier Gaming Mécanique", price: 35, category: "Électronique", image: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=600", sales: 88 },
+  { id: 8, name: "Chaise Pivotante Ergonomique", price: 85, category: "Mobilier", image: "https://images.unsplash.com/photo-1505797149-43b00fe9ee2c?auto=format&fit=crop&q=80&w=600", sales: 45 },
 ])
 
-const categories = ['Tous', 'Accessoires', 'Électronique', 'Chaussures', 'Mode']
+const categories = [
+  { name: 'Tous', icon: 'app-grid' },
+  { name: 'Mode', icon: 'person' },
+  { name: 'Électronique', icon: 'flash' },
+  { name: 'Chaussures', icon: 'walk' },
+  { name: 'Accessoires', icon: 'watch' }
+]
 const activeCategory = ref('Tous')
+
+// Compte à rebours ventes flash
+const timeLeft = ref("02:45:12")
+
+// Logique Carousel
+const currentSlide = ref(0)
+const slides = [
+  { title: "Mois de la Mode", img: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e12?auto=format&fit=crop&w=800&q=80", color: "from-orange-500" },
+  { title: "Tech Days -70%", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=800&q=80", color: "from-blue-600" }
+]
+
+let timer: number
+onMounted(() => {
+  timer = window.setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % slides.length
+  }, 4000)
+})
+onUnmounted(() => clearInterval(timer))
 
 const filteredProducts = computed(() => {
   if (activeCategory.value === 'Tous') return products.value
@@ -32,100 +58,155 @@ const filteredProducts = computed(() => {
 </script>
 
 <template>
-  <main class="bg-white pb-32"> <section class="relative min-h-[60vh] flex items-center bg-slate-900 px-6 py-12 overflow-hidden">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 blur-[80px] rounded-full"></div>
-      <div class="max-w-7xl mx-auto w-full relative z-10">
-        <span class="text-blue-400 font-black uppercase tracking-[0.2em] text-[10px]">Collection 2026</span>
-        <h1 class="text-4xl md:text-7xl font-black text-white mt-2 leading-[1.1] tracking-tighter uppercase">
-          L'Élite du <span class="text-blue-500 italic">Style.</span>
-        </h1>
-        <button class="mt-8 bg-white text-slate-900 px-6 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all">
-          Découvrir
-        </button>
+  <main class="bg-gray-100 min-h-screen pb-24">
+    
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#FF4B2B] px-4 py-3 flex items-center gap-3 shadow-md">
+      <div class="flex-1 bg-white rounded-full flex items-center px-4 py-2 gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        <input type="text" placeholder="Chercher sur SchorShop..." class="bg-transparent text-sm w-full outline-none text-gray-700" />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /></svg>
       </div>
-    </section>
-
-    <div class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 py-4 overflow-x-auto no-scrollbar flex gap-2">
-      <button 
-        v-for="cat in categories" :key="cat"
-        @click="activeCategory = cat"
-        :class="activeCategory === cat ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'bg-slate-50 text-slate-500'"
-        class="flex-none px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap"
-      >
-        {{ cat }}
+      <button class="relative text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+        <span class="absolute -top-1 -right-1 bg-yellow-400 text-[10px] text-black font-bold w-4 h-4 rounded-full flex items-center justify-center">5</span>
       </button>
-    </div>
+    </header>
 
-    <section class="p-4 md:p-8">
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8">
-        <div 
-          v-for="(product, index) in filteredProducts" 
-          :key="product.id" 
-          class="group animate-fade-in"
-          :style="{ animationDelay: `${index * 50}ms` }"
-        >
-          <div class="relative aspect-[3/4] overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-slate-100 mb-3">
-            <div class="absolute top-2 left-2 z-10 flex flex-col gap-1">
-              <span v-if="product.isNew" class="bg-blue-600 text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase">New</span>
-              <span v-if="product.discount" class="bg-rose-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase">-{{ product.discount }}%</span>
-            </div>
-            <img :src="product.image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-            
-            <button class="absolute bottom-2 right-2 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
-            </button>
+    <section class="mt-14 relative h-48 overflow-hidden">
+      <div v-for="(slide, i) in slides" :key="i" 
+           class="absolute inset-0 transition-all duration-700"
+           :class="currentSlide === i ? 'translate-x-0' : 'translate-x-full'">
+        <img :src="slide.img" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex flex-col justify-center px-6">
+          <h2 class="text-white text-2xl font-black uppercase italic">{{ slide.title }}</h2>
+          <p class="text-yellow-400 text-xs font-bold mt-1">Saisissez l'occasion maintenant</p>
+        </div>
+      </div>
+      <div class="absolute bottom-3 right-6 flex gap-1.5">
+        <div v-for="(_, i) in slides" :key="i" class="w-2 h-2 rounded-full border border-white" :class="currentSlide === i ? 'bg-white' : ''"></div>
+      </div>
+    </section>
+
+    <section class="bg-white py-4 px-2 flex overflow-x-auto no-scrollbar gap-4 shadow-sm">
+      <button v-for="cat in categories" :key="cat.name" 
+        @click="activeCategory = cat.name"
+        class="flex flex-col items-center min-w-[70px] gap-1 transition-all"
+        :class="activeCategory === cat.name ? 'scale-110' : 'opacity-70'"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center border border-gray-100"
+             :class="activeCategory === cat.name ? 'bg-orange-50 border-orange-200 text-[#FF4B2B]' : 'text-gray-600'">
+           <i :class="`fas fa-${cat.icon}`"></i>
+        </div>
+        <span class="text-[10px] font-bold uppercase tracking-tighter">{{ cat.name }}</span>
+      </button>
+    </section>
+
+    <section class="mt-2 bg-white p-4">
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center gap-2">
+          <h3 class="text-[#FF4B2B] font-black uppercase text-sm italic">Ventes Flash</h3>
+          <div class="flex gap-1 text-white font-bold text-[10px]">
+            <span class="bg-black px-1 rounded">{{ timeLeft.split(':')[0] }}</span>
+            <span class="text-black">:</span>
+            <span class="bg-black px-1 rounded">{{ timeLeft.split(':')[1] }}</span>
+            <span class="text-black">:</span>
+            <span class="bg-black px-1 rounded text-[#FF4B2B]">{{ timeLeft.split(':')[2] }}</span>
+          </div>
+        </div>
+        <button class="text-gray-400 text-[10px] font-bold uppercase">Plus ></button>
+      </div>
+      <div class="flex overflow-x-auto gap-3 no-scrollbar">
+        <div v-for="p in products.filter(x => x.discount)" :key="p.id" class="min-w-[120px] relative">
+          <div class="aspect-square rounded-xl bg-gray-50 overflow-hidden mb-2">
+            <img :src="p.image" loading="lazy" class="w-full h-full object-cover" />
+          </div>
+          <p class="text-[#FF4B2B] font-black text-sm">{{ p.price }} $</p>
+          <p class="text-[9px] text-gray-400 line-through">{{ Math.round(p.price * 1.5) }} $</p>
+          <div class="absolute top-1 right-1 bg-[#FF4B2B] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full">
+            -{{ p.discount }}%
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="p-2 mt-2">
+      <h3 class="px-2 mb-3 font-bold text-gray-500 text-xs uppercase tracking-widest">Articles recommandés</h3>
+      <div class="grid grid-cols-2 gap-2">
+        <div v-for="p in filteredProducts" :key="p.id" 
+             class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col active:scale-[0.98] transition-all">
+          
+          <div class="relative aspect-[4/5] bg-gray-50">
+            <img :src="p.image" loading="lazy" class="w-full h-full object-cover" />
+            <div v-if="p.isNew" class="absolute top-2 left-2 bg-green-500 text-white text-[8px] font-black px-2 py-0.5 rounded-sm">NOUVEAU</div>
           </div>
 
-          <div class="px-1">
-            <h3 class="font-bold text-slate-900 text-xs md:text-lg truncate">{{ product.name }}</h3>
-            <div class="flex items-center gap-2">
-              <span class="font-black text-blue-600 text-sm">{{ product.price }} $</span>
-              <span v-if="product.discount" class="text-[10px] text-slate-400 line-through font-bold">
-                {{ Math.round(product.price * 1.2) }} $
-              </span>
+          <div class="p-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h4 class="text-xs text-gray-700 font-medium line-clamp-2 leading-tight mb-2">{{ p.name }}</h4>
+            </div>
+            <div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-[#FF4B2B] font-black text-lg">{{ p.price }} $</span>
+              </div>
+              <div class="flex justify-between items-center mt-1">
+                <span class="text-[9px] text-gray-400 font-bold uppercase">{{ p.sales }} Vendus</span>
+                <button class="text-[#FF4B2B]"><i class="fas fa-cart-plus"></i></button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50">
-      <div class="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-3xl p-2 shadow-2xl flex justify-around items-center">
-        <router-link to="/" class="p-3 text-blue-400">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-        </router-link>
-        <button class="p-3 text-slate-400 hover:text-white transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-        </button>
-        <div class="relative">
-          <button class="bg-blue-600 p-4 rounded-2xl text-white shadow-lg shadow-blue-500/40 -translate-y-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-          </button>
-          <span class="absolute -top-1 -right-1 bg-rose-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-slate-900">2</span>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 flex justify-around items-center z-50">
+      <button class="flex flex-col items-center gap-1 text-[#FF4B2B]">
+        <i class="fas fa-home text-lg"></i>
+        <span class="text-[9px] font-bold uppercase">Accueil</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-gray-400">
+        <i class="fas fa-th-large text-lg"></i>
+        <span class="text-[9px] font-bold uppercase">Catégories</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-gray-400 relative">
+        <div class="bg-gray-100 w-12 h-12 rounded-full -mt-8 border-4 border-gray-100 flex items-center justify-center shadow-lg bg-gradient-to-tr from-[#FF4B2B] to-[#FF8C00] text-white">
+          <i class="fas fa-shopping-cart"></i>
         </div>
-        <button class="p-3 text-slate-400 hover:text-white transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-        </button>
-        <button class="p-3 text-slate-400 hover:text-white transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-        </button>
-      </div>
+        <span class="text-[9px] font-bold uppercase mt-1">Panier</span>
+        <span class="absolute -top-6 right-0 bg-yellow-400 text-black text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">2</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-gray-400">
+        <i class="fas fa-heart text-lg"></i>
+        <span class="text-[9px] font-bold uppercase">Favoris</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-gray-400">
+        <i class="fas fa-user text-lg"></i>
+        <span class="text-[9px] font-bold uppercase">Compte</span>
+      </button>
     </nav>
 
   </main>
 </template>
 
 <style scoped>
+/* Masquer scrollbar */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+/* Animation entrée produits */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-  opacity: 0;
+.grid > div {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Line clamp pour le titre (2 lignes max) */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
 }
 </style>
