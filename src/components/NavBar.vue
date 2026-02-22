@@ -4,10 +4,10 @@
         <i class="fas fa-home text-lg"></i>
         <span class="text-[9px] font-bold uppercase">Accueil</span>
       </a>
-      <button class="flex flex-col items-center gap-1 text-gray-400">
+      <a href="/categories" class="flex flex-col items-center gap-1 text-gray-400">
         <i class="fas fa-th-large text-lg"></i>
         <span class="text-[9px] font-bold uppercase">Catégories</span>
-      </button>
+      </a>
       <button class="flex flex-col items-center gap-1 text-gray-400 relative">
         <div class="bg-gray-100 w-12 h-12 rounded-full -mt-8 border-4 border-gray-100 flex items-center justify-center shadow-lg bg-gradient-to-tr from-[#FF4B2B] to-[#FF8C00] text-white">
           <i class="fas fa-shopping-cart"></i>

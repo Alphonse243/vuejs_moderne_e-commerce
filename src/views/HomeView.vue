@@ -1,62 +1,62 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+  import { ref, computed, onMounted, onUnmounted } from 'vue'
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  image: string;
-  isNew?: boolean;
-  discount?: number;
-  sales?: number;
-}
+  interface Product {
+    id: number;
+    name: string;
+    price: number;
+    category: string;
+    image: string;
+    isNew?: boolean;
+    discount?: number;
+    sales?: number;
+  }
 
-// Données étendues pour démonstration
-const products = ref<Product[]>([
-  { id: 1, name: "Montre Quartz S-Series", price: 12, category: "Accessoires", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600", isNew: true, sales: 154 },
-  { id: 2, name: "Casque Audio Wireless Pro", price: 45, category: "Électronique", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=600", discount: 30, sales: 890 },
-  { id: 3, name: "Sneakers Air-Walk White", price: 25, category: "Chaussures", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=600", sales: 432 },
-  { id: 4, name: "Sac à dos Urbain Waterproof", price: 18, category: "Mode", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=600", isNew: true, sales: 67 },
-  { id: 5, name: "Appareil Photo Retro X5", price: 120, category: "Électronique", image: "https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&fit=crop&q=80&w=600", sales: 12 },
-  { id: 6, name: "Lunettes Polarisées Gold", price: 15, category: "Accessoires", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=600", discount: 50, sales: 1205 },
-  { id: 7, name: "Clavier Gaming Mécanique", price: 35, category: "Électronique", image: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=600", sales: 88 },
-  { id: 8, name: "Chaise Pivotante Ergonomique", price: 85, category: "Mobilier", image: "https://images.unsplash.com/photo-1505797149-43b00fe9ee2c?auto=format&fit=crop&q=80&w=600", sales: 45 },
-])
+  // Données étendues pour démonstration
+  const products = ref<Product[]>([
+    { id: 1, name: "Montre Quartz S-Series", price: 12, category: "Accessoires", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600", isNew: true, sales: 154 },
+    { id: 2, name: "Casque Audio Wireless Pro", price: 45, category: "Électronique", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=600", discount: 30, sales: 890 },
+    { id: 3, name: "Sneakers Air-Walk White", price: 25, category: "Chaussures", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=600", sales: 432 },
+    { id: 4, name: "Sac à dos Urbain Waterproof", price: 18, category: "Mode", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=600", isNew: true, sales: 67 },
+    { id: 5, name: "Appareil Photo Retro X5", price: 120, category: "Électronique", image: "https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&fit=crop&q=80&w=600", sales: 12 },
+    { id: 6, name: "Lunettes Polarisées Gold", price: 15, category: "Accessoires", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=600", discount: 50, sales: 1205 },
+    { id: 7, name: "Clavier Gaming Mécanique", price: 35, category: "Électronique", image: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=600", sales: 88 },
+    { id: 8, name: "Chaise Pivotante Ergonomique", price: 85, category: "Mobilier", image: "https://images.unsplash.com/photo-1505797149-43b00fe9ee2c?auto=format&fit=crop&q=80&w=600", sales: 45 },
+  ])
 
-const categories = [
-  { name: 'Tous', icon: 'app-grid' },
-  { name: 'Mode', icon: 'person' },
-  { name: 'Électronique', icon: 'flash' },
-  { name: 'Chaussures', icon: 'walk' },
-  { name: 'Accessoires', icon: 'watch' }
-]
-const activeCategory = ref('Tous')
+  const categories = [
+    { name: 'Tous', icon: 'app-grid' },
+    { name: 'Mode', icon: 'person' },
+    { name: 'Électronique', icon: 'flash' },
+    { name: 'Chaussures', icon: 'walk' },
+    { name: 'Accessoires', icon: 'watch' }
+  ]
+  const activeCategory = ref('Tous')
 
-// Compte à rebours ventes flash
-const timeLeft = ref("02:45:12")
+  // Compte à rebours ventes flash
+  const timeLeft = ref("02:45:12")
 
-// Logique Carousel
-const currentSlide = ref(0)
-const slides = [
-  { title: "Mois de la Mode", img: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e12?auto=format&fit=crop&w=800&q=80", color: "from-orange-500" },
-  { title: "Tech Days -70%", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=800&q=80", color: "from-blue-600" },
-  { title: "Mois de la Mode 2", img: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e12?auto=format&fit=crop&w=800&q=80", color: "from-orange-500" },
-  { title: "Tech Days -70% 2", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=800&q=80", color: "from-blue-600" }
-]
+  // Logique Carousel
+  const currentSlide = ref(0)
+  const slides = [
+    { title: "Mois de la Mode", img: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e12?auto=format&fit=crop&w=800&q=80", color: "from-orange-500" },
+    { title: "Tech Days -70%", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=800&q=80", color: "from-blue-600" },
+    { title: "Mois de la Mode 2", img: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e12?auto=format&fit=crop&w=800&q=80", color: "from-orange-500" },
+    { title: "Tech Days -70% 2", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=800&q=80", color: "from-blue-600" }
+  ]
 
-let timer: number
-onMounted(() => {
-  timer = window.setInterval(() => {
-    currentSlide.value = (currentSlide.value + 1) % slides.length
-  }, 4000)
-})
-onUnmounted(() => clearInterval(timer))
+  let timer: number
+  onMounted(() => {
+    timer = window.setInterval(() => {
+      currentSlide.value = (currentSlide.value + 1) % slides.length
+    }, 4000)
+  })
+  onUnmounted(() => clearInterval(timer))
 
-const filteredProducts = computed(() => {
-  if (activeCategory.value === 'Tous') return products.value
-  return products.value.filter(p => p.category === activeCategory.value)
-})
+  const filteredProducts = computed(() => {
+    if (activeCategory.value === 'Tous') return products.value
+    return products.value.filter(p => p.category === activeCategory.value)
+  })
 </script>
 
 <template>
