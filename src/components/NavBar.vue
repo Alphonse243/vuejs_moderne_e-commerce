@@ -19,9 +19,9 @@
         <i class="fas fa-heart text-lg"></i>
         <span class="text-[9px] font-bold uppercase">Favoris</span>
       </button>
-      <button class="flex flex-col items-center gap-1 text-gray-400">
+      <a href="/profile" class="flex flex-col items-center gap-1 text-gray-400">
         <i class="fas fa-user text-lg"></i>
         <span class="text-[9px] font-bold uppercase">Compte</span>
-      </button>
+      </a>
     </nav>
 </template>
