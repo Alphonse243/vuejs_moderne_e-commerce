@@ -17,6 +17,7 @@ const formatPrice = (price) => {
 };
 </script>
 
+
 <template>
   <div class="max-w-7xl mx-auto p-6">
     <header class="mb-10 text-center">
@@ -32,7 +33,7 @@ const formatPrice = (price) => {
       Erreur : {{ error.message }}
     </div>
 
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <div v-else class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
       <article 
         v-for="product in products" 
         :key="product.id" 
