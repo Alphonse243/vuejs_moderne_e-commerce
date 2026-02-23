@@ -5,6 +5,10 @@ import UserProfile from '@/components/UserProfile.vue'
 
 const router = createRouter({
   history: createWebHistory(),
+  // Scroll to top automatique lors du changement de page
+  scrollBehavior() {
+    return { top: 0, behavior: 'smooth' }
+  },
   routes: [
     {
       path: '/',
@@ -14,7 +18,14 @@ const router = createRouter({
     {
       path: '/boutique',
       name: 'shop',
-      component: () => import('../views/ShopView.vue') // Lazy loading
+      component: () => import('../views/ShopView.vue')
+    },
+    // NOUVELLE ROUTE : Détails du produit via le Slug
+    {
+      path: '/produit/:slug',
+      name: 'product-detail',
+      component: () => import('../views/ProductDetailView.vue'), // Assure-toi de nommer ton fichier ainsi
+      props: true // Permet de passer le slug comme une prop au composant
     },
     {
       path: '/categories',
