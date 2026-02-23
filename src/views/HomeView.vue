@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import { ref, computed, onMounted, onUnmounted } from 'vue'
+  import { ref, computed, onMounted, onUnmounted } from 'vue';
+  import ProductList from '@/components/ProductList.vue';
 
   interface Product {
     id: number;
@@ -164,6 +165,7 @@
       </div>
     </section>
 
+  <ProductList />
 
 
   </main>
